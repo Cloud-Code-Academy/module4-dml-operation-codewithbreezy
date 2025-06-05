@@ -17,7 +17,7 @@
  * The methods within this class serve as practical examples of different DML operations,
  * allowing developers to learn through practice and examples.
  *
- * @author Your Name
+ * @author Briana Stout
  */
 
 
@@ -30,14 +30,14 @@ public with sharing class DMLOperations {
      * @return The Id of the newly created Account.
      */
     public static Id insertNewAccount() {
-        // Create a new Account instance
+        Account acc = new Account ();// Create a new Account instance
 
-        // Set some fields on the Account
+        acc.Name = 'The Hardware Store' ; // Set some fields on the Account
 
-        // Insert the Account into the database
+       insert acc; // Insert the Account into the database
 
         // Return the Id of the newly created Account
-        return null;
+        return acc.Id;
     }
 
     /**
