@@ -152,12 +152,49 @@ public with sharing class DMLOperations {
      * @param accountName The name of the Account.
      * @param oppNames The list of Opportunity names.
      */
-    public static void upsertOpportunities(String accountName, List<String> oppNames) {
-        // Loop through each Opportunity name
-            // Create an Opportunity with the given name
-            // Add the Opportunity to the list
+ public static void upsertOpportunities(String accountName, List<String> oppNames) {
+  
+    List<Account> existingAccounts = [SELECT Id FROM Account WHERE Name = :accountName LIMIT 1];
+
+    Account acc;
+    if (!existingAccounts.isEmpty()) {
+        acc = existingAccounts[0];
+    } else {
+        acc = new Account(Name = accountName);
+        insert acc;
     }
-    
+
+
+    Map<String, Opportunity> existingOppsMap = new Map<String, Opportunity>();
+    for (Opportunity opp : [
+        SELECT Id, Name FROM Opportunity 
+        WHERE Name IN :oppNames AND AccountId = :acc.Id
+    ]) {
+        existingOppsMap.put(opp.Name, opp);
+    }
+
+    List<Opportunity> oppsToUpsert = new List<Opportunity>();
+    for (String oppName : oppNames) {
+        Opportunity opp;
+        if (existingOppsMap.containsKey(oppName)) {
+            // Update existing opportunity
+            opp = existingOppsMap.get(oppName);
+        } else {
+            // Create new opportunity
+            opp = new Opportunity();
+            opp.Name = oppName;
+        }
+
+        opp.AccountId = acc.Id;
+        opp.StageName = 'Prospecting';
+        opp.CloseDate = Date.today().addMonths(3);
+
+        oppsToUpsert.add(opp);
+    }
+
+    // Step 4: Upsert the list
+    upsert oppsToUpsert;
+}
     /**
      * Question 9
 	 * Upserts an Account with the specified name.
