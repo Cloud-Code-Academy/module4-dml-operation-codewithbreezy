@@ -98,11 +98,11 @@ public with sharing class DMLOperations {
      */
     public static void updateOpportunityStage(Id oppId, String newStage) {
         // Retrieve the Opportunity from the database
-        // [SELECT Id FROM Opportunity WHERE Id = :oppId]
+        Opportunity opp = [SELECT Id FROM Opportunity WHERE Id = :oppId LIMIT 1];
 
-        // Update the Opportunity's stage
+        opp.StageName = newStage;// Update the Opportunity's stage
 
-        // Update the Opportunity in the database
+       update opp; // Update the Opportunity in the database
     }
 
     /**
