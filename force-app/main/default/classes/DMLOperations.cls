@@ -82,11 +82,11 @@ public with sharing class DMLOperations {
      */
     public static void updateContactLastName(Id contactId, String newLastName) {
         // Retrieve the Contact from the database
-        // [SELECT Id FROM Contact WHERE Id = :contactId]
+        Contact con = [SELECT Id FROM Contact WHERE Id = :contactId LIMIT 1];
 
-        // Update the Contact's last name
+        con.LastName = newLastName;// Update the Contact's last name
 
-        // Update the Contact in the database
+        update con;// Update the Contact in the database
     }
 
     /**
