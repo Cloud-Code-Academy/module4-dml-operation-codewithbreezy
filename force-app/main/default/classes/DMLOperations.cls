@@ -191,8 +191,6 @@ public with sharing class DMLOperations {
 
         oppsToUpsert.add(opp);
     }
-
-    // Step 4: Upsert the list
     upsert oppsToUpsert;
 }
     /**
@@ -207,13 +205,22 @@ public with sharing class DMLOperations {
 		// Query for the Account
 		List<Account> accounts = [SELECT Id FROM Account WHERE Name = :accountName];
 
-		// if the Account exists, update the description
+          Account acc;
 
-		// otherwise, create a new Account and set the description
+    if (!accounts.isEmpty()) {
+        // Account exists — update its description
+        acc = accounts[0];
+        acc.Description = 'Updated Account';
+    } else {
+        // No Account exists — create a new one
+        acc = new Account(Name = accountName, Description = 'New Account');
+    }
 
-		// Upsert the Account
-		return null;
-	}
+    // Upsert the Account
+    upsert acc;
+
+    return acc;
+}
 
     /**
      * Question 10
