@@ -60,15 +60,17 @@ public with sharing class DMLOperations {
      * @return The Id of the newly created Contact.
      */
     public static Id insertNewContact(Id accountId) {
-        // Create a new Contact instance
+      Contact con = new Contact ();  // Create a new Contact instance
 
-        // Set some fields on the Contact
+        con.FirstName = 'Mickey';
+        con.LastName = 'Mouse';
+        con.AccountId = accountId;// Set some fields on the Contact
         // Set the AccountId field to the given accountId
 
-        // Insert the Contact into the database
+       insert con; // Insert the Contact into the database
 
         // Return the Id of the newly created Contact
-        return null;
+        return con.Id;
     }
 
     /**
